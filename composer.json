@@ -4,7 +4,9 @@
     "type": "magento2-module",
     "require": {
         "ext-dom": "*",
-        "magento/framework": "*"
+        "magento/framework": "*",
+        "magento/module-indexer": "*",
+        "mateuszmesek-magento2/module-document-data-indexer-api": "*"
     },
     "replace": {
         "mateuszmesek-magento2/module-document-data-indexer": "*"
