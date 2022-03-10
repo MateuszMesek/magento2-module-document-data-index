@@ -1,30 +1,43 @@
 <?php declare(strict_types=1);
 
-namespace MateuszMesek\DocumentIndexer\Command;
+namespace MateuszMesek\DocumentDataIndexer\Command;
 
-use MateuszMesek\DocumentIndexer\Command\GetEntityIdsByDimensions\Pool;
-use MateuszMesek\DocumentIndexerApi\Command\GetEntityIdsByDimensionsInterface;
-use MateuszMesek\DocumentIndexerApi\DimensionResolverInterface;
+use Magento\Framework\ObjectManagerInterface;
+use MateuszMesek\DocumentDataIndexer\Config;
+use MateuszMesek\DocumentDataIndexerApi\Command\GetEntityIdsByDimensionsInterface;
+use MateuszMesek\DocumentDataIndexerApi\DimensionResolverInterface;
+use MateuszMesek\DocumentDataIndexerApi\EntityIdsResolverInterface;
 use Traversable;
 
 class GetEntityIdsByDimensions implements GetEntityIdsByDimensionsInterface
 {
-    private Pool $pool;
-    private DimensionResolverInterface $documentResolver;
+    private Config $config;
+    private DimensionResolverInterface $documentNameResolver;
+    private ObjectManagerInterface $objectManager;
 
     public function __construct(
-        Pool $pool,
-        DimensionResolverInterface $documentResolver
+        Config $config,
+        DimensionResolverInterface $documentNameResolver,
+        ObjectManagerInterface $objectManager
     )
     {
-        $this->pool = $pool;
-        $this->documentResolver = $documentResolver;
+        $this->config = $config;
+        $this->documentNameResolver = $documentNameResolver;
+        $this->objectManager = $objectManager;
     }
 
     public function execute(array $dimensions): Traversable
     {
-        $document = $this->documentResolver->resolve($dimensions);
+        $documentName = $this->documentNameResolver->resolve($dimensions);
 
-        return $this->pool->get($document)->execute($dimensions);
+        $instanceName = $this->config->getEntityIdsResolver($documentName);
+
+        $instance = $this->objectManager->get($instanceName);
+
+        if (!$instance instanceof EntityIdsResolverInterface) {
+
+        }
+
+        return $instance->resolve($dimensions);
     }
 }

@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace MateuszMesek\DocumentIndexer\Command\GetDocumentsByDimensionsAndEntityIds;
+namespace MateuszMesek\DocumentDataIndexer\Command\GetDocumentsByDimensionsAndEntityIds;
 
 use Magento\Framework\ObjectManager\TMap;
 use Magento\Framework\ObjectManager\TMapFactory;
-use MateuszMesek\DocumentIndexerApi\Command\GetDocumentsByDimensionsAndEntityIdsInterface;
+use MateuszMesek\DocumentDataIndexerApi\Command\GetDocumentsByDimensionsAndEntityIdsInterface;
 
 class Pool
 {

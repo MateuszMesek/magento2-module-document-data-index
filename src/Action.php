@@ -1,70 +1,63 @@
 <?php declare(strict_types=1);
 
-namespace MateuszMesek\DocumentIndexer;
+namespace MateuszMesek\DocumentDataIndexer;
 
-use ArrayIterator;
+use InvalidArgumentException;
 use Magento\Framework\Indexer\ActionInterface;
-use Magento\Framework\Indexer\DimensionalIndexerInterface;
-use Magento\Framework\Indexer\DimensionProviderInterface;
-use MateuszMesek\DocumentIndexerApi\Command\GetDocumentsByDimensionsAndEntityIdsInterface;
-use MateuszMesek\DocumentIndexerApi\Command\GetEntityIdsByDimensionsInterface;
-use MateuszMesek\DocumentIndexerApi\SaveHandlerInterface;
-use Traversable;
+use MateuszMesek\DocumentDataIndexer\Action\DimensionProviderFactory;
+use MateuszMesek\DocumentDataIndexer\Action\ExecutorFactory;
+use MateuszMesek\DocumentDataIndexer\Action\Full;
+use MateuszMesek\DocumentDataIndexer\Action\Row;
+use MateuszMesek\DocumentDataIndexer\Action\Rows;
 
-class Action implements ActionInterface, DimensionalIndexerInterface
+class Action implements ActionInterface
 {
-    private DimensionProviderInterface $dimensionProvider;
-    private GetEntityIdsByDimensionsInterface $getEntityIdsByDimensions;
-    private GetDocumentsByDimensionsAndEntityIdsInterface $getDocumentsByDimensionsAndEntityIds;
-    private SaveHandlerInterface $saveHandler;
+    private DimensionProviderFactory $dimensionProviderFactory;
+    private ExecutorFactory $executorFactory;
+    private string $documentName;
 
     public function __construct(
-        DimensionProviderInterface                    $dimensionProvider,
-        GetEntityIdsByDimensionsInterface             $getEntityIdsByDimensions,
-        GetDocumentsByDimensionsAndEntityIdsInterface $getDocumentsByDimensionsAndEntityIds,
-        SaveHandlerInterface                          $saveHandler
+        DimensionProviderFactory $dimensionProviderFactory,
+        ExecutorFactory $executorFactory,
+        array $data
     )
     {
-        $this->dimensionProvider = $dimensionProvider;
-        $this->getEntityIdsByDimensions = $getEntityIdsByDimensions;
-        $this->getDocumentsByDimensionsAndEntityIds = $getDocumentsByDimensionsAndEntityIds;
-        $this->saveHandler = $saveHandler;
+        if (!isset($data['document_name'])) {
+            throw new InvalidArgumentException('Document name was not specified');
+        }
+
+        $this->dimensionProviderFactory = $dimensionProviderFactory;
+        $this->executorFactory = $executorFactory;
+        $this->documentName = $data['document_name'];
     }
 
     public function executeFull(): void
     {
-        foreach ($this->dimensionProvider->getIterator() as $dimensions) {
-            $ids = $this->getEntityIdsByDimensions->execute($dimensions);
-
-            $this->executeByDimensions($dimensions, $ids);
-
-            // TODO: remove not indexed ids
-        }
+        $this->executeAction(Full::TYPE);
     }
 
     public function executeList(array $ids): void
     {
-        foreach ($this->dimensionProvider->getIterator() as $dimension) {
-            $this->executeByDimensions($dimension, new ArrayIterator($ids));
-        }
+        $this->executeAction(Rows::TYPE, $ids);
     }
 
     public function executeRow($id): void
     {
-        $this->executeList([$id]);
+        $this->executeAction(Row::TYPE, $id);
     }
 
-    public function executeByDimensions(array $dimensions, Traversable $entityIds): void
+    private function executeAction(string $actionType, $arguments = null): void
     {
-        if (!$this->saveHandler->isAvailable($dimensions)) {
-            return;
-        }
-
-        $documents = $this->getDocumentsByDimensionsAndEntityIds->execute($dimensions, $entityIds);
-
-        $this->saveHandler->saveIndex(
-            $dimensions,
-            $documents
+        $dimensionProvider = $this->dimensionProviderFactory->create(
+            $this->documentName
         );
+
+        $executor = $this->executorFactory->create(
+            $actionType,
+            $dimensionProvider
+        );
+
+        /* @noinspection VariableFunctionsUsageInspection */
+        call_user_func([$executor, 'execute'], $arguments);
     }
 }

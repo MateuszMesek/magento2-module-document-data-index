@@ -1,5 +1,89 @@
 <?xml version="1.0" ?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <preference for="MateuszMesek\DocumentIndexerApi\Command\GetDocumentsByDimensionsAndEntityIdsInterface" type="MateuszMesek\DocumentIndexer\Command\GetDocumentsByDimensionsAndEntityIds"/>
-    <preference for="MateuszMesek\DocumentIndexerApi\Command\GetEntityIdsByDimensionsInterface" type="MateuszMesek\DocumentIndexer\Command\GetEntityIdsByDimensions"/>
+    <preference for="MateuszMesek\DocumentDataIndexerApi\EntityIdsResolverInterface" type="MateuszMesek\DocumentDataIndexer\EntityIdsResolver"/>
+    <type name="MateuszMesek\DocumentDataIndexer\EntityIdsResolver">
+        <arguments>
+            <argument name="documentNameResolver" xsi:type="object">MateuszMesek\DocumentDataIndexer\DimensionResolver\DocumentNameResolver</argument>
+        </arguments>
+    </type>
+    <preference for="MateuszMesek\DocumentDataIndexerApi\DataResolverInterface" type="MateuszMesek\DocumentDataIndexer\DataResolver"/>
+    <type name="MateuszMesek\DocumentDataIndexer\DataResolver">
+        <arguments>
+            <argument name="documentNameResolver" xsi:type="object">MateuszMesek\DocumentDataIndexer\DimensionResolver\DocumentNameResolver</argument>
+        </arguments>
+    </type>
+
+
+    <preference for="MateuszMesek\DocumentDataIndexerApi\Command\GetDocumentsByDimensionsAndEntityIdsInterface" type="MateuszMesek\DocumentDataIndexer\Command\GetDocumentsByDimensionsAndEntityIds"/>
+    <preference for="MateuszMesek\DocumentDataIndexerApi\Command\GetEntityIdsByDimensionsInterface" type="MateuszMesek\DocumentDataIndexer\Command\GetEntityIdsByDimensions"/>
+    <preference for="MateuszMesek\DocumentDataIndexerApi\Command\GetIndexNamesInterface" type="MateuszMesek\DocumentDataIndexer\Command\GetIndexNames"/>
+    <preference for="MateuszMesek\DocumentDataIndexerApi\IndexNameResolverInterface" type="MateuszMesek\DocumentDataIndexer\IndexNameResolver"/>
+    <type name="MateuszMesek\DocumentDataIndexer\Command\GetDocumentsByDimensionsAndEntityIds">
+        <arguments>
+            <argument name="documentResolver" xsi:type="object">MateuszMesek\DocumentDataIndexer\DimensionResolver\DocumentNameResolver</argument>
+        </arguments>
+    </type>
+    <type name="MateuszMesek\DocumentDataIndexer\Command\GetEntityIdsByDimensions">
+        <arguments>
+            <argument name="documentResolver" xsi:type="object">MateuszMesek\DocumentDataIndexer\DimensionResolver\DocumentNameResolver</argument>
+        </arguments>
+    </type>
+    <type name="MateuszMesek\DocumentDataIndexer\IndexNameResolver">
+        <arguments>
+            <argument name="documentNameResolver" xsi:type="object">MateuszMesek\DocumentDataIndexer\DimensionResolver\DocumentNameResolver</argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Framework\Indexer\Config\Reader">
+        <plugin name="MateuszMesek_DocumentDataIndexer" type="MateuszMesek\DocumentDataIndexer\Plugin\InjectIndexers\OnIndexerConfigReader"/>
+    </type>
+
+    <!-- config -->
+    <type name="MateuszMesek\DocumentDataIndexer\Config">
+        <arguments>
+            <argument name="data" xsi:type="object">MateuszMesek\DocumentDataIndexer\Config\Data</argument>
+        </arguments>
+    </type>
+    <virtualType name="MateuszMesek\DocumentDataIndexer\Config\Data" type="Magento\Framework\Config\Data">
+        <arguments>
+            <argument name="reader" xsi:type="object">MateuszMesek\DocumentDataIndexer\Config\Reader</argument>
+            <argument name="cacheId" xsi:type="string">document_data_indexer_config_cache</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="MateuszMesek\DocumentDataIndexer\Config\Reader" type="Magento\Framework\Config\Reader\Filesystem">
+        <arguments>
+            <argument name="converter" xsi:type="object">MateuszMesek\DocumentDataIndexer\Config\Converter</argument>
+            <argument name="schemaLocator" xsi:type="object">MateuszMesek\DocumentDataIndexer\Config\SchemaLocator</argument>
+            <argument name="fileName" xsi:type="string">document_data_indexer.xml</argument>
+            <argument name="idAttributes" xsi:type="array">
+                <item name="/config/document" xsi:type="string">name</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="MateuszMesek\DocumentDataIndexer\Config\Converter">
+        <arguments>
+            <argument name="documentProcessor" xsi:type="object">MateuszMesek\DocumentDataIndexer\Config\Converter\Document</argument>
+        </arguments>
+    </type>
+    <virtualType name="MateuszMesek\DocumentDataIndexer\Config\SchemaLocator" type="Magento\Framework\Config\GenericSchemaLocator">
+        <arguments>
+            <argument name="moduleName" xsi:type="string">MateuszMesek_DocumentDataIndexer</argument>
+            <argument name="schema" xsi:type="string">document_data_indexer.xsd</argument>
+        </arguments>
+    </virtualType>
+
+    <type name="MateuszMesek\DocumentDataIndexer\Action\ExecutorFactory">
+        <arguments>
+            <argument name="types" xsi:type="array">
+                <item name="full" xsi:type="string">MateuszMesek\DocumentDataIndexer\Action\Full</item>
+                <item name="row" xsi:type="string">MateuszMesek\DocumentDataIndexer\Action\Row</item>
+                <item name="rows" xsi:type="string">MateuszMesek\DocumentDataIndexer\Action\Rows</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="MateuszMesek\DocumentDataIndexer\Action\Full">
+        <arguments>
+            <argument name="dimensionalIndexer" xsi:type="object">MateuszMesek\DocumentDataIndexer\DimensionalIndexer</argument>
+        </arguments>
+    </type>
 </config>
