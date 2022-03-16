@@ -37,6 +37,9 @@
     <type name="Magento\Framework\Indexer\Config\Reader">
         <plugin name="MateuszMesek_DocumentDataIndexer" type="MateuszMesek\DocumentDataIndexer\Plugin\InjectIndexers\OnIndexerConfigReader"/>
     </type>
+    <type name="Magento\Framework\Mview\Config\Reader">
+        <plugin name="MateuszMesek_DocumentDataIndexer" type="MateuszMesek\DocumentDataIndexer\Plugin\InjectViews\OnViewConfigReader"/>
+    </type>
 
     <!-- config -->
     <type name="MateuszMesek\DocumentDataIndexer\Config">
