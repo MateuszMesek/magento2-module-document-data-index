@@ -89,4 +89,14 @@
             <argument name="dimensionalIndexer" xsi:type="object">MateuszMesek\DocumentDataIndexer\DimensionalIndexer</argument>
         </arguments>
     </type>
+    <type name="MateuszMesek\DocumentDataIndexer\Action\Row">
+        <arguments>
+            <argument name="dimensionalIndexer" xsi:type="object">MateuszMesek\DocumentDataIndexer\DimensionalIndexer</argument>
+        </arguments>
+    </type>
+    <type name="MateuszMesek\DocumentDataIndexer\Action\Rows">
+        <arguments>
+            <argument name="dimensionalIndexer" xsi:type="object">MateuszMesek\DocumentDataIndexer\DimensionalIndexer</argument>
+        </arguments>
+    </type>
 </config>
