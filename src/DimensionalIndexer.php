@@ -1,24 +1,25 @@
 <?php declare(strict_types=1);
 
-namespace MateuszMesek\DocumentDataIndexer;
+namespace MateuszMesek\DocumentDataIndex;
 
+use ArrayIterator;
 use Magento\Framework\Indexer\DimensionalIndexerInterface;
-use MateuszMesek\DocumentDataIndexerApi\DataResolverInterface;
-use MateuszMesek\DocumentDataIndexerApi\SaveHandlerInterface;
+use MateuszMesek\DocumentDataIndexApi\DataResolverInterface;
+use MateuszMesek\DocumentDataIndexApi\SaveHandlerInterface;
 use Traversable;
 
 class DimensionalIndexer implements DimensionalIndexerInterface
 {
-    private DataResolverInterface $dataResolver;
     private SaveHandlerInterface $saveHandler;
+    private DataResolverInterface $dataResolver;
 
     public function __construct(
-        DataResolverInterface $dataResolver,
-        SaveHandlerInterface  $saveHandler
+        SaveHandlerInterface  $saveHandler,
+        DataResolverInterface $dataResolver
     )
     {
-        $this->dataResolver = $dataResolver;
         $this->saveHandler = $saveHandler;
+        $this->dataResolver = $dataResolver;
     }
 
     public function executeByDimensions(array $dimensions, Traversable $entityIds): void
@@ -29,9 +30,23 @@ class DimensionalIndexer implements DimensionalIndexerInterface
 
         $documents = $this->dataResolver->resolve($dimensions, $entityIds);
 
-        $this->saveHandler->saveIndex(
-            $dimensions,
-            $documents
-        );
+        $toDelete = [];
+        $toSave = [];
+
+        foreach ($documents as $documentId => $document) {
+            if (empty($document)) {
+                $toDelete[] = $documentId;
+            } else {
+                $toSave[$documentId] = $document;
+            }
+        }
+
+        if (!empty($toDelete)) {
+            $this->saveHandler->deleteIndex($dimensions, new ArrayIterator($toDelete));
+        }
+
+        if (!empty($toSave)) {
+            $this->saveHandler->saveIndex($dimensions, new ArrayIterator($toSave));
+        }
     }
 }

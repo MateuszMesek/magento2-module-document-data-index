@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace MateuszMesek\DocumentDataIndexer\Command;
+namespace MateuszMesek\DocumentDataIndex\Command;
 
-use MateuszMesek\DocumentDataIndexer\Command\GetDocumentsByDimensionsAndEntityIds\Pool;
-use MateuszMesek\DocumentDataIndexerApi\Command\GetDocumentsByDimensionsAndEntityIdsInterface;
-use MateuszMesek\DocumentDataIndexerApi\DimensionResolverInterface;
+use MateuszMesek\DocumentDataIndex\Command\GetDocumentsByDimensionsAndEntityIds\Pool;
+use MateuszMesek\DocumentDataIndexApi\Command\GetDocumentsByDimensionsAndEntityIdsInterface;
+use MateuszMesek\DocumentDataIndexApi\DimensionResolverInterface;
 use Traversable;
 
 class GetDocumentsByDimensionsAndEntityIds implements GetDocumentsByDimensionsAndEntityIdsInterface

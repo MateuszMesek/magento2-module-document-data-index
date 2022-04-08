@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace MateuszMesek\DocumentDataIndexer\DimensionResolver;
+namespace MateuszMesek\DocumentDataIndex\DimensionResolver;
 
 use Magento\Store\Model\StoreDimensionProvider;
 use Magento\Store\Model\StoreManagerInterface;
-use MateuszMesek\DocumentDataIndexerApi\DimensionResolverInterface;
+use MateuszMesek\DocumentDataIndexApi\DimensionResolverInterface;
 
 class StoreIdResolver implements DimensionResolverInterface
 {

@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace MateuszMesek\DocumentDataIndexer;
+namespace MateuszMesek\DocumentDataIndex;
 
 use InvalidArgumentException;
 use Magento\Framework\ObjectManagerInterface;
-use MateuszMesek\DocumentDataIndexerApi\EntityIdsResolverInterface;
+use MateuszMesek\DocumentDataIndexApi\EntityIdsResolverInterface;
 
 class EntityIdsResolverFactory
 {
@@ -23,6 +23,12 @@ class EntityIdsResolverFactory
     public function create(string $documentName): EntityIdsResolverInterface
     {
         $type = $this->config->getEntityIdsResolver($documentName);
+
+        if (null === $type) {
+            throw new InvalidArgumentException(
+                "Entity ids resolver for '$documentName' document data is not configured"
+            );
+        }
 
         $entityIdsResolver = $this->objectManager->create($type);
 

@@ -4,6 +4,6 @@ use Magento\Framework\Component\ComponentRegistrar;
 
 ComponentRegistrar::register(
     ComponentRegistrar::MODULE,
-    'MateuszMesek_DocumentDataIndexer',
+    'MateuszMesek_DocumentDataIndex',
     __DIR__
 );

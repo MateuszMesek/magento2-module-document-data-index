@@ -1,18 +1,19 @@
 <?php declare(strict_types=1);
 
-namespace MateuszMesek\DocumentDataIndexer;
+namespace MateuszMesek\DocumentDataIndex;
 
 use InvalidArgumentException;
 use Magento\Framework\ObjectManagerInterface;
-use MateuszMesek\DocumentDataIndexerApi\DataResolverInterface;
+use MateuszMesek\DocumentDataIndexApi\Config\DataResolverInterface as ConfigInterface;
+use MateuszMesek\DocumentDataIndexApi\DataResolverInterface;
 
 class DataResolverFactory
 {
-    private Config $config;
+    private ConfigInterface $config;
     private ObjectManagerInterface $objectManager;
 
     public function __construct(
-        Config $config,
+        ConfigInterface        $config,
         ObjectManagerInterface $objectManager
     )
     {
@@ -23,6 +24,12 @@ class DataResolverFactory
     public function create(string $documentName): DataResolverInterface
     {
         $type = $this->config->getDataResolver($documentName);
+
+        if (null === $type) {
+            throw new InvalidArgumentException(
+                "Data resolver for '$documentName' document data is not configured"
+            );
+        }
 
         $dataResolver = $this->objectManager->create($type);
 

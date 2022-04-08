@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace MateuszMesek\DocumentDataIndexer;
+namespace MateuszMesek\DocumentDataIndex;
 
-use MateuszMesek\DocumentDataIndexer\Action\DimensionProviderFactory;
-use MateuszMesek\DocumentDataIndexerApi\IndexNameResolverInterface;
-use MateuszMesek\DocumentDataIndexerApi\IndexNamesProviderInterface;
+use MateuszMesek\DocumentDataIndex\Action\DimensionProviderFactory;
+use MateuszMesek\DocumentDataIndexApi\IndexNameResolverInterface;
+use MateuszMesek\DocumentDataIndexApi\IndexNamesProviderInterface;
 use Traversable;
 
 class IndexNamesProvider implements IndexNamesProviderInterface

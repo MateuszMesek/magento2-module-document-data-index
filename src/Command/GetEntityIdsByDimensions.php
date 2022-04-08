@@ -1,12 +1,12 @@
 <?php declare(strict_types=1);
 
-namespace MateuszMesek\DocumentDataIndexer\Command;
+namespace MateuszMesek\DocumentDataIndex\Command;
 
 use Magento\Framework\ObjectManagerInterface;
-use MateuszMesek\DocumentDataIndexer\Config;
-use MateuszMesek\DocumentDataIndexerApi\Command\GetEntityIdsByDimensionsInterface;
-use MateuszMesek\DocumentDataIndexerApi\DimensionResolverInterface;
-use MateuszMesek\DocumentDataIndexerApi\EntityIdsResolverInterface;
+use MateuszMesek\DocumentDataIndex\Config;
+use MateuszMesek\DocumentDataIndexApi\Command\GetEntityIdsByDimensionsInterface;
+use MateuszMesek\DocumentDataIndexApi\DimensionResolverInterface;
+use MateuszMesek\DocumentDataIndexApi\EntityIdsResolverInterface;
 use Traversable;
 
 class GetEntityIdsByDimensions implements GetEntityIdsByDimensionsInterface

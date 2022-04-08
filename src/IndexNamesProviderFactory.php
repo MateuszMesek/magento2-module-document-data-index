@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace MateuszMesek\DocumentDataIndexer;
+namespace MateuszMesek\DocumentDataIndex;
 
 use InvalidArgumentException;
 use Magento\Framework\ObjectManagerInterface;
-use MateuszMesek\DocumentDataIndexerApi\IndexNamesProviderInterface;
+use MateuszMesek\DocumentDataIndexApi\IndexNamesProviderInterface;
 
 class IndexNamesProviderFactory
 {
@@ -23,6 +23,13 @@ class IndexNamesProviderFactory
     public function create(string $documentName): IndexNamesProviderInterface
     {
         $type = $this->config->getIndexNamesProvider($documentName);
+
+        if (null === $type) {
+            throw new InvalidArgumentException(
+                "Index names provider for '$documentName' document data is not configured"
+            );
+        }
+
         $arguments = [];
 
         if (!$type) {

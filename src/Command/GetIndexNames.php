@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace MateuszMesek\DocumentDataIndexer\Command;
+namespace MateuszMesek\DocumentDataIndex\Command;
 
-use MateuszMesek\DocumentDataIndexer\Config;
-use MateuszMesek\DocumentDataIndexer\IndexNamesProviderFactory;
-use MateuszMesek\DocumentDataIndexerApi\Command\GetIndexNamesInterface;
+use MateuszMesek\DocumentDataIndex\Config;
+use MateuszMesek\DocumentDataIndex\IndexNamesProviderFactory;
+use MateuszMesek\DocumentDataIndexApi\Command\GetIndexNamesInterface;
 use Traversable;
 
 class GetIndexNames implements GetIndexNamesInterface

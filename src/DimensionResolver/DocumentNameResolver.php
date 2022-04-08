@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace MateuszMesek\DocumentDataIndexer\DimensionResolver;
+namespace MateuszMesek\DocumentDataIndex\DimensionResolver;
 
-use MateuszMesek\DocumentDataIndexer\DimensionProvider\WithDocumentNameProvider;
-use MateuszMesek\DocumentDataIndexerApi\DimensionResolverInterface;
+use MateuszMesek\DocumentDataIndex\DimensionProvider\WithDocumentNameProvider;
+use MateuszMesek\DocumentDataIndexApi\DimensionResolverInterface;
 
 class DocumentNameResolver implements DimensionResolverInterface
 {

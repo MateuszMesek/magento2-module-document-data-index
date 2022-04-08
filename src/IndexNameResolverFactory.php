@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace MateuszMesek\DocumentDataIndexer;
+namespace MateuszMesek\DocumentDataIndex;
 
 use InvalidArgumentException;
 use Magento\Framework\ObjectManagerInterface;
-use MateuszMesek\DocumentDataIndexerApi\IndexNameResolverInterface;
+use MateuszMesek\DocumentDataIndexApi\IndexNameResolverInterface;
 
 class IndexNameResolverFactory
 {
@@ -23,6 +23,12 @@ class IndexNameResolverFactory
     public function create(string $documentName): IndexNameResolverInterface
     {
         $type = $this->config->getIndexNameResolver($documentName);
+
+        if (null === $type) {
+            throw new InvalidArgumentException(
+                "Index name resolver for '$documentName' document data is not configured"
+            );
+        }
 
         $indexNameResolver = $this->objectManager->create($type);
 
