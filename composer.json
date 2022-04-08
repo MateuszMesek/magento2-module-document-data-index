@@ -18,8 +18,5 @@
         "psr-4": {
             "MateuszMesek\\DocumentDataIndex\\": "src"
         }
-    },
-    "replace": {
-        "mateuszmesek-magento2/module-document-data-index": "*"
     }
 }
