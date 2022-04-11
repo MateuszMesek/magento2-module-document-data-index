@@ -23,6 +23,6 @@ class IndexNameResolver implements IndexNameResolverInterface
     {
         $documentName = $this->documentNameResolver->resolve($dimensions);
 
-        return $this->indexNameResolverFactory->create($documentName)->resolve($dimensions);
+        return $this->indexNameResolverFactory->get($documentName)->resolve($dimensions);
     }
 }

@@ -4,15 +4,20 @@ namespace MateuszMesek\DocumentDataIndex;
 
 use InvalidArgumentException;
 use Magento\Framework\ObjectManagerInterface;
+use MateuszMesek\DocumentDataIndexApi\Config\IndexNameResolverInterface as ConfigInterface;
 use MateuszMesek\DocumentDataIndexApi\IndexNameResolverInterface;
 
 class IndexNameResolverFactory
 {
-    private Config $config;
+    private ConfigInterface $config;
     private ObjectManagerInterface $objectManager;
+    /**
+     * @var IndexNameResolverInterface[]
+     */
+    private array $instances = [];
 
     public function __construct(
-        Config $config,
+        ConfigInterface        $config,
         ObjectManagerInterface $objectManager
     )
     {
@@ -41,5 +46,14 @@ class IndexNameResolverFactory
         }
 
         return $indexNameResolver;
+    }
+
+    public function get(string $documentName): IndexNameResolverInterface
+    {
+        if (!isset($this->instances[$documentName])) {
+            $this->instances[$documentName] = $this->create($documentName);
+        }
+
+        return $this->instances[$documentName];
     }
 }

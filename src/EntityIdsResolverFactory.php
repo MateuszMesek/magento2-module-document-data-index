@@ -4,15 +4,16 @@ namespace MateuszMesek\DocumentDataIndex;
 
 use InvalidArgumentException;
 use Magento\Framework\ObjectManagerInterface;
+use MateuszMesek\DocumentDataIndexApi\Config\EntityIdsResolverInterface as ConfigInterface;
 use MateuszMesek\DocumentDataIndexApi\EntityIdsResolverInterface;
 
 class EntityIdsResolverFactory
 {
-    private Config $config;
+    private ConfigInterface $config;
     private ObjectManagerInterface $objectManager;
 
     public function __construct(
-        Config $config,
+        ConfigInterface        $config,
         ObjectManagerInterface $objectManager
     )
     {
